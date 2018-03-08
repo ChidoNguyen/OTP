@@ -23,7 +23,7 @@ int main(int argc, char *argv[]){
 		}
 		printf("\n");
 	}
-	else
-		printf("Wrong number or arguments. ./keygen [keylength]\n");
+	else // https://stackoverflow.com/questions/39002052/how-i-can-print-to-stderr-in-c
+		fprintf(stderr, "%s","Wrong number or arguments. ./keygen [keylength]\n");
 	return 0;
 }
