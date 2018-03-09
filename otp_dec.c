@@ -1,8 +1,8 @@
 /*Chido Nguyen
 931506965
 Program 4: OTP
-OTP_ENC:
-our "client" to talk to our server daemon. Program takes 2 arguments our plaintext, and key files. Transfer both to our encryption server, then receives the cipher text back.
+OTP_DEC:
+
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,7 +12,7 @@ our "client" to talk to our server daemon. Program takes 2 arguments our plainte
 #include <netinet/in.h>
 #include <netdb.h>
 
-char* pass = "shouldbeasecret";
+char* pass = "hashedpassword";
 
 int KEY[27] = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',' '};
 
@@ -71,7 +71,8 @@ int main(int argc, char* argv[]){
 		error("Bad Handshake");
 	}
 	
-	//////////
+	
+	/////////
 	if(charsWritten < 0 ) error("Client: Send failed");
 	if( charsWritten < strlen(pass)) printf("Warning dropped packets\n");
 	/////////////////

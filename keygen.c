@@ -9,7 +9,7 @@ The program/app will take 1 argument that denotes the length of they key to be g
 #include <stdlib.h>
 #include <string.h>
 
-char* KEY[27] = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"," "};
+int KEY[27] = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',' '};
 
 int main(int argc, char *argv[]){
 	srand(time(NULL));
@@ -19,7 +19,7 @@ int main(int argc, char *argv[]){
 		int i, index;
 		for(i = 0; i < length ; i++){
 			index = rand() % 27;
-			printf("%s", KEY[index]);
+			printf("%c", KEY[index]);
 		}
 		printf("\n");
 	}

@@ -2,8 +2,8 @@
 Chido Nguyen
 931506965
 Program 4: OTP
-OTP_ENC_D:
-This is our daemon or "server" that listens for connection requests from OTP_ENC. It will 
+OTP_DEC_D:
+
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,10 +11,12 @@ This is our daemon or "server" that listens for connection requests from OTP_ENC
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-// "secret pass" to verify ID of which client is sending to it //
-char* pass = "shouldbeasecret";
 
 int KEY[27] = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',' '};
+
+// "secret pass" to verify ID of which client is sending to it //
+char* pass = "hashedpassword";
+
 
 void error(const char *msg) { perror(msg); exit(1); } // Error function used for reporting issues
 
@@ -77,19 +79,22 @@ int poor_mans_atoi(char letter){
 	return -1;
 }
 /*
-OTP_encrypt:
+OTP_decrypt:
 This is our encryption function , following OTP mod 27 procedure.
 input: plaintext array , and key array of characters
 output: void function, but fills out a third buffer with cipher to be sent back
-ENCRYPTION PROCESS: text + 
+
 */
-void OTP_encrypt(char* txt, char* key, char* enc){
+void OTP_decrypt(char* txt, char* key, char* enc){
 	int txtLength = strlen(txt);
 	int x,txt_index, key_index,cipher;
 	for(x = 0 ; x < txtLength ; x++){
 		txt_index = poor_mans_atoi(txt[x]);
 		key_index = poor_mans_atoi(key[x]);
-		cipher = (txt_index + key_index) % 27;
+		cipher = (txt_index - key_index) % 27;
+		if(cipher < 0 ){
+			cipher += 27;
+		}
 		enc[x] = KEY[cipher];
 	}
 }
@@ -175,7 +180,7 @@ int main( int argc, char * argv[]){
 				charsRead = recv(establishedConnectionFD, buffer2, tmp, 0);
 				if(charsRead < 0 ) error("Empty coms");
 				//encryption //
-				OTP_encrypt(buffer,buffer2,buffer3);
+				OTP_decrypt(buffer,buffer2,buffer3);
 				charsRead = send(establishedConnectionFD, buffer3,strlen(buffer3),0);
 				if(charsRead < 0 ) error("Send to sock failed");
 			}
