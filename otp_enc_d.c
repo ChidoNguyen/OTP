@@ -164,19 +164,39 @@ int main( int argc, char * argv[]){
 				memset(buffer, '\0', 500000);
 				memset(buffer2, '\0', 500000);
 				memset(buffer3, '\0', 500000);
-				int tmp;
+				int wordcount, tmp;
 				charsRead = recv(establishedConnectionFD, buffer, 10,0);
-				tmp = atoi(buffer);
+				wordcount = atoi(buffer);
 				memset(buffer, '\0', 500000);
 				// takes in plaintext //
-				charsRead = recv(establishedConnectionFD, buffer, tmp, 0);
+				char *pointer;
+				pointer = buffer;
+				charsRead = 0;
+				tmp = wordcount;
+				while(tmp > 0 ){
+					charsRead = recv(establishedConnectionFD, pointer, tmp, 0);
+					pointer = pointer + charsRead;
+					tmp = tmp - charsRead;
+				}
 				if(charsRead < 0 ) error("Empty coms");
 				//takes in key//
-				charsRead = recv(establishedConnectionFD, buffer2, tmp, 0);
+				pointer = buffer2;
+				tmp = wordcount;
+				while( tmp > 0){
+					charsRead = recv(establishedConnectionFD, pointer, tmp, 0);
+					pointer = pointer + charsRead;
+					tmp = tmp - charsRead;
+				}
 				if(charsRead < 0 ) error("Empty coms");
 				//encryption //
 				OTP_encrypt(buffer,buffer2,buffer3);
-				charsRead = send(establishedConnectionFD, buffer3,strlen(buffer3),0);
+				pointer = buffer3;
+				tmp = wordcount;
+				while( tmp > 0 ){
+					charsRead = send(establishedConnectionFD, buffer3,strlen(buffer3),0) ;
+					pointer = pointer + charsRead;
+					tmp = tmp - charsRead;
+				}
 				if(charsRead < 0 ) error("Send to sock failed");
 			}
 			else{

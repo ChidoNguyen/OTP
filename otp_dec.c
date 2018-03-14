@@ -114,16 +114,40 @@ int main(int argc, char* argv[]){
 	memset(tmp2, '\0', sizeof(tmp2));
 	//itoa(wordcount, tmp2, 10);
 	snprintf(tmp2, 10, "%i", wordcount);
+	char * pointer;
+	pointer = buffer;
+	int tmpholder;
+	tmpholder =  wordcount;
 	charsWritten = send(socketFD, tmp2, 10, 0);
+
 	//send plaintxt
-	charsWritten = send(socketFD, buffer, strlen(buffer), 0);
+	charsWritten = 0;
+	while ( tmpholder > 0){
+		charsWritten = send(socketFD, pointer, tmpholder , 0);
+		pointer = pointer + charsWritten;
+		tmpholder = tmpholder - charsWritten;
+
+	}
 	//send key
-	charsWritten = send(socketFD, buffer2, strlen(buffer2), 0);
+	charsWritten = 0;
+	pointer = buffer2;
+	tmpholder = wordcount;
+	while (tmpholder > 0){
+		charsWritten = send(socketFD, pointer, tmpholder, 0);
+		pointer = pointer + charsWritten;
+		tmpholder = tmpholder - charsWritten;
+	}
 
 	//get cipher back
 	memset(buffer3, '\0', sizeof(buffer3));
-	charsRead = recv(socketFD, buffer3, wordcount, 0);
-	
+	pointer = buffer3;
+	tmpholder = wordcount;
+	while( tmpholder > 0){
+		charsRead = recv(socketFD, pointer, wordcount, 0);
+		pointer = pointer + charsRead;
+		tmpholder = tmpholder - charsRead;
+	}
+
 	fprintf(stdout, "%s\n", buffer3);
 	fflush(stdout);
 	
